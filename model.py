@@ -262,30 +262,8 @@ class TimeMemoryAttention(nn.Module):
         
     
 
-
 #---------------------------------------------
 
-
-## Final model
-
-class MTS(object):
-
-    def __init__(self, vocab_size):
-        super(MTS, self).__init__()
-
-        self.Encoder = EventEmbedding(vocab_size)
-        self.Memory = TimeEventMemory()
-        self.Decoder = SummaryGenerator(vocab_size)
-        
-        if torch.cuda.is_available():
-            self.Encoder = self.Encoder.cuda()
-            self.Memory = self.Memory.cuda()
-            self.Decoder = self.Decoder.cuda()
-
-
-#---------------------------------------------
-
-### Decoder initialization
 
 class InitDecoder(nn.Module):
 
@@ -304,3 +282,26 @@ class InitDecoder(nn.Module):
         h_0 = h_0.view(1, bs, -1) # 1 x b x hidden
 
         return (h_0, h_0)
+
+
+#---------------------------------------------
+
+
+## Final model
+
+class MTS(object):
+
+    def __init__(self, vocab_size):
+        super(MTS, self).__init__()
+
+        self.Encoder = EventEmbedding(vocab_size)
+        self.Memory = TimeEventMemory()
+        self.Init_Decoder = InitDecoder()
+        self.Decoder = SummaryGenerator(vocab_size)
+        
+        if torch.cuda.is_available():
+            self.Encoder = self.Encoder.cuda()
+            self.Memory = self.Memory.cuda()
+            self.Init_Decoder = self.Init_Decoder.cuda()
+            self.Decoder = self.Decoder.cuda()
+
